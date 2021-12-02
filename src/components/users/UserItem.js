@@ -1,26 +1,27 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-export class UserItem extends Component {
-  render() {
-    //Removing this.state from this.state.avatar_url to clean up
-    //change to this.props since its getting as a prop from 'user' array in Users component
-    const { login, avatar_url, html_url } = this.props.user;
+// Adding Props to cleanup in the function argument
+const UserItem = ({ user: { login, avatar_url, html_url } }) => {
+  //No Render method for function
+  return (
+    <div className='card text-center'>
+      <img
+        src={avatar_url}
+        alt={'Image of ' + login}
+        className='round-img'
+        style={{ width: '80px' }}
+      />
+      <h1>{login}</h1>
+      <a href={html_url} className='btn btn-dark btn-sm my-1 '>
+        More
+      </a>
+    </div>
+  );
+};
 
-    return (
-      <div className='card text-center'>
-        <img
-          src={avatar_url}
-          alt={'Image of ' + login}
-          className='round-img'
-          style={{ width: '80px' }}
-        />
-        <h1>{login}</h1>
-        <a href={html_url} className='btn btn-dark btn-sm my-1 '>
-          More
-        </a>
-      </div>
-    );
-  }
-}
+UserItem.propTypes = {
+  user: PropTypes.object.isRequired,
+};
 
 export default UserItem;
