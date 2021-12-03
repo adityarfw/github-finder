@@ -2,6 +2,7 @@ import { Component } from 'react';
 import './App.css';
 import Navbar from './components/layout/Navbar';
 import Users from './components/users/Users';
+import axios from 'axios';
 
 //Class needs to extend component from React
 //Class cannot directly return, hence needs a render method and return is placed within it.
@@ -10,6 +11,16 @@ import Users from './components/users/Users';
 //
 
 class App extends Component {
+  state = {
+    users: [],
+    loading: false,
+  };
+  //get lifecycle method
+  async componentDidMount() {
+    this.setState({ loading: true });
+    const response = await axios.get('https://api.github.com/users');
+    this.setState({ users: response.data, loading: false });
+  }
   render() {
     return (
       <div className='App'>
@@ -19,7 +30,7 @@ class App extends Component {
           style={{ paddingRight: `5px` }}
         />
         <div className='container'>
-          <Users />
+          <Users loading={this.state.loading} users={this.state.users} />
         </div>
       </div>
     );
