@@ -3,6 +3,7 @@ import './App.css';
 import Navbar from './components/layout/Navbar';
 import Users from './components/users/Users';
 import axios from 'axios';
+import Search from './components/users/Search';
 
 //Class needs to extend component from React
 //Class cannot directly return, hence needs a render method and return is placed within it.
@@ -32,6 +33,7 @@ class App extends Component {
           style={{ paddingRight: `5px` }}
         />
         <div className='container'>
+          <Search />
           <Users loading={this.state.loading} users={this.state.users} />
         </div>
       </div>
