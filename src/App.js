@@ -16,14 +16,27 @@ class App extends Component {
     users: [],
     loading: false,
   };
+
   //get lifecycle method, this is a method that will run as soon as the App opens up
-  async componentDidMount() {
+  // async componentDidMount() {
+  //   this.setState({ loading: true });
+  //   const response = await axios.get(
+  //     `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+  //   );
+  //   this.setState({ users: response.data, loading: false });
+  // }
+
+  // Do not need to display generated users from above as all users are searchable
+  // Creating a function for the prop and using async/await to retrive users by text
+  // The response is in array items within data.
+  searchUser = async (text) => {
     this.setState({ loading: true });
     const response = await axios.get(
-      `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+      `https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
     );
-    this.setState({ users: response.data, loading: false });
-  }
+    this.setState({ users: response.data.items, loading: false });
+  };
+
   render() {
     return (
       <div className='App'>
@@ -33,7 +46,7 @@ class App extends Component {
           style={{ paddingRight: `5px` }}
         />
         <div className='container'>
-          <Search />
+          <Search searchUser={this.searchUser} />
           <Users loading={this.state.loading} users={this.state.users} />
         </div>
       </div>

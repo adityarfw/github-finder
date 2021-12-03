@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export class Search extends Component {
   // A form needs to have a state in react
@@ -7,9 +8,17 @@ export class Search extends Component {
     text: '',
   };
 
+  static propTypes = {
+    searchUser: PropTypes.func.isRequired,
+  };
+
+  //Creating a Prop to pass up the text to App.js using this.props.searchUser
+  //The searchUser function will be created in App.js
+
   onSubmit = (e) => {
     e.preventDefault();
-    console.log(this.state.text);
+    this.props.searchUser(this.state.text);
+    this.setState({ text: '' });
   };
 
   onChange = (e) => {
