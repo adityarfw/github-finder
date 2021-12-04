@@ -37,7 +37,12 @@ class App extends Component {
     this.setState({ users: response.data.items, loading: false });
   };
 
+  clearUsers = () => {
+    this.setState({ users: [], loading: false });
+  };
+
   render() {
+    const { loading, users } = this.state;
     return (
       <div className='App'>
         <Navbar
@@ -46,8 +51,12 @@ class App extends Component {
           style={{ paddingRight: `5px` }}
         />
         <div className='container'>
-          <Search searchUser={this.searchUser} />
-          <Users loading={this.state.loading} users={this.state.users} />
+          <Search
+            searchUser={this.searchUser}
+            clearUsers={this.clearUsers}
+            showClear={users.length > 0 ? true : false}
+          />
+          <Users loading={loading} users={users} />
         </div>
       </div>
     );
