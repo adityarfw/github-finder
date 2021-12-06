@@ -7,6 +7,7 @@
   --light-color: #f4f4f4;
   --danger-color: #dc3545;
   --success-color: #28a745;
+  --warning-color: orange;
 }
 
 * {
@@ -80,6 +81,10 @@ img {
 
 .text-success {
   color: var(--success-color);
+}
+
+.text-warning {
+  color: var(--warning-color);
 }
 
 .text-danger {
@@ -275,6 +280,14 @@ img {
 .alert-danger {
   background: var(--danger-color);
   color: #fff;
+}
+
+.btn-warning,
+.bg-warning,
+.badge-warning,
+.alert-warning {
+  background: var(--warning-color);
+  color: black;
 }
 
 .btn-success,

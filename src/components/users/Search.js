@@ -12,6 +12,7 @@ export class Search extends Component {
     searchUser: PropTypes.func.isRequired,
     clearUsers: PropTypes.func.isRequired,
     showClear: PropTypes.bool.isRequired,
+    setAlert: PropTypes.func.isRequired,
   };
 
   //Creating a Prop to pass up the text to App.js using this.props.searchUser
@@ -19,8 +20,12 @@ export class Search extends Component {
 
   onSubmit = (e) => {
     e.preventDefault();
-    this.props.searchUser(this.state.text);
-    this.setState({ text: '' });
+    if (this.state.text === '') {
+      this.props.setAlert('Please Enter a keyword', 'warning');
+    } else {
+      this.props.searchUser(this.state.text);
+      this.setState({ text: '' });
+    }
   };
 
   onChange = (e) => {
