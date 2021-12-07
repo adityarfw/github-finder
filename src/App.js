@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; //Usi
 import './App.css';
 import Navbar from './components/layout/Navbar';
 import Users from './components/users/Users';
+import User from './components/users/User';
 import axios from 'axios';
 import Search from './components/users/Search';
 import Alert from './components/layout/Alert';
@@ -17,6 +18,8 @@ import About from './components/pages/About';
 class App extends Component {
   state = {
     users: [],
+    user: {},
+    repos: [],
     loading: false,
     alert: null,
   };
@@ -41,6 +44,23 @@ class App extends Component {
     this.setState({ users: response.data.items, loading: false });
   };
 
+  // Get a single user info when clicked on More
+  getUser = async (username) => {
+    this.setState({ loading: true });
+    const response = await axios.get(
+      `https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    this.setState({ user: response.data, loading: false });
+  };
+
+  getUsersRepos = async (username) => {
+    this.setState({ loading: true });
+    const response = await axios.get(
+      `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    this.setState({ repos: response.data, loading: false });
+  };
+
   clearUsers = () => {
     this.setState({ users: [], loading: false });
   };
@@ -52,7 +72,7 @@ class App extends Component {
   };
 
   render() {
-    const { loading, users } = this.state;
+    const { loading, users, user, repos } = this.state;
 
     return (
       <Router>
@@ -68,7 +88,7 @@ class App extends Component {
               <Route
                 path='/' // Using path instead of exact path in Router v6
                 element={
-                  // All are elements instead of render and component
+                  // In react-router-dom v6 the Route components no longer have render or component props, all routes render their components, as JSX, on the element prop. There is also no longer an exact prop as all routes are now always exactly matched.
                   <Fragment>
                     <Search
                       searchUser={this.searchUser}
@@ -81,6 +101,21 @@ class App extends Component {
                 }
               />
               <Route path='/about' element={<About />} />
+              <Route
+                path='/user/:login'
+                // Do not need to add props as its automatically imported
+                element={
+                  <Fragment>
+                    <User
+                      getUser={this.getUser}
+                      getUserRepos={this.getUserRepos}
+                      user={user}
+                      repos={repos}
+                      loading={loading}
+                    />
+                  </Fragment>
+                }
+              />
             </Routes>
           </div>
         </div>
