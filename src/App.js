@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { useState, Fragment } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; //Using Routes instead of Switch  in Router v6
 import './App.css';
 import Navbar from './components/layout/Navbar';
@@ -15,14 +15,12 @@ import About from './components/pages/About';
 // from {this.myCity()} > using this because the method is outside the current method and part of the class
 //
 
-class App extends Component {
-  state = {
-    users: [],
-    user: {},
-    repos: [],
-    loading: false,
-    alert: null,
-  };
+const App = () => {
+  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState({});
+  const [repos, setRepos] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState(null);
 
   //get lifecycle method, this is a method that will run as soon as the App opens up
   // async componentDidMount() {
@@ -36,92 +34,96 @@ class App extends Component {
   // Do not need to display generated users from above as all users are searchable
   // Creating a function for the prop and using async/await to retrive users by text
   // The response is in array items within data.
-  searchUser = async (text) => {
-    this.setState({ loading: true });
+  const searchUser = async (text) => {
+    setLoading(true);
     const response = await axios.get(
       `https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
     );
-    this.setState({ users: response.data.items, loading: false });
+    setUsers(response.data.items);
+    setLoading(false);
   };
 
   // Get a single user info when clicked on More
-  getUser = async (username) => {
-    this.setState({ loading: true });
+  const getUser = async (username) => {
+    setLoading(true);
     const response = await axios.get(
       `https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
     );
-    this.setState({ user: response.data, loading: false });
+
+    setUser(response.data);
+    setLoading(false);
   };
 
-  getUsersRepos = async (username) => {
-    this.setState({ loading: true });
+  const getUserRepos = async (username) => {
+    setLoading(true);
     const response = await axios.get(
       `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
     );
-    this.setState({ repos: response.data, loading: false });
+
+    console.log(response.data);
+    setRepos(response.data);
+    setLoading(false);
   };
 
-  clearUsers = () => {
-    this.setState({ users: [], loading: false });
+  const clearUsers = () => {
+    setUsers([]);
+    setLoading(false);
   };
 
-  setAlert = (msg, type) => {
-    this.setState({ alert: { msg: msg, type: type } });
+  const showAlert = (msg, type) => {
+    setAlert({ msg, type });
+
     //Add time to Alert to disappear
-    setTimeout(() => this.setState({ alert: null }), 2000);
+    setTimeout(() => setAlert(null), 2000);
   };
 
-  render() {
-    const { loading, users, user, repos } = this.state;
-
-    return (
-      <Router>
-        <div className='App'>
-          <Navbar
-            title='Github Finder'
-            icon='fab fa-github'
-            style={{ paddingRight: `5px` }}
-          />
-          <div className='container'>
-            <Alert alert={this.state.alert} />
-            <Routes>
-              <Route
-                path='/' // Using path instead of exact path in Router v6
-                element={
-                  // In react-router-dom v6 the Route components no longer have render or component props, all routes render their components, as JSX, on the element prop. There is also no longer an exact prop as all routes are now always exactly matched.
-                  <Fragment>
-                    <Search
-                      searchUser={this.searchUser}
-                      clearUsers={this.clearUsers}
-                      showClear={users.length > 0 ? true : false}
-                      setAlert={this.setAlert}
-                    />
-                    <Users loading={loading} users={users} />
-                  </Fragment>
-                }
-              />
-              <Route path='/about' element={<About />} />
-              <Route
-                path='/user/:login'
-                // Do not need to add props as its automatically imported
-                element={
-                  <Fragment>
-                    <User
-                      getUser={this.getUser}
-                      getUserRepos={this.getUserRepos}
-                      user={user}
-                      repos={repos}
-                      loading={loading}
-                    />
-                  </Fragment>
-                }
-              />
-            </Routes>
-          </div>
+  return (
+    <Router>
+      <div className='App'>
+        <Navbar
+          title='Github Finder'
+          icon='fab fa-github'
+          style={{ paddingRight: `5px` }}
+        />
+        <div className='container'>
+          <Alert alert={alert} />
+          <Routes>
+            <Route
+              path='/' // Using path instead of exact path in Router v6
+              element={
+                // In react-router-dom v6 the Route components no longer have render or component props, all routes render their components, as JSX, on the element prop. There is also no longer an exact prop as all routes are now always exactly matched.
+                <Fragment>
+                  <Search
+                    searchUser={searchUser}
+                    clearUsers={clearUsers}
+                    showClear={users.length > 0 ? true : false}
+                    setAlert={showAlert}
+                  />
+                  <Users loading={loading} users={users} />
+                </Fragment>
+              }
+            />
+            <Route path='/about' element={<About />} />
+            <Route
+              path='/user/:userlogin'
+              // Do not need to add props as its automatically imported
+              element={
+                <Fragment>
+                  <User
+                    getUser={getUser}
+                    getUserRepos={getUserRepos}
+                    user={user}
+                    repos={repos}
+                    loading={loading}
+                  />
+                </Fragment>
+              }
+            />
+          </Routes>
         </div>
-      </Router>
-    );
-  }
-}
+      </div>
+    </Router>
+  );
+};
 
 export default App;

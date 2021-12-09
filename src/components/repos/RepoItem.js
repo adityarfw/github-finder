@@ -4,13 +4,15 @@ import PropTypes from 'prop-types';
 const RepoItem = ({ repo }) => {
   return (
     <div className='card'>
-      <h3>{/* <a href={repo.html_url}>{repo.name}</a> */}</h3>
+      <h3>
+        <p>{repo}</p>
+      </h3>
     </div>
   );
 };
 
 RepoItem.propTypes = {
-  repo: PropTypes.object.isRequired,
+  repo: PropTypes.array.isRequired,
 };
 
 export default RepoItem;
