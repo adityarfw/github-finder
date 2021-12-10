@@ -36,14 +36,6 @@ const App = () => {
   // Do not need to display generated users from above as all users are searchable
   // Creating a function for the prop and using async/await to retrive users by text
   // The response is in array items within data.
-  const searchUser = async (text) => {
-    setLoading(true);
-    const response = await axios.get(
-      `https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-    );
-    setUsers(response.data.items);
-    setLoading(false);
-  };
 
   // Get a single user info when clicked on More
   const getUser = async (username) => {
@@ -97,7 +89,7 @@ const App = () => {
                   // In react-router-dom v6 the Route components no longer have render or component props, all routes render their components, as JSX, on the element prop. There is also no longer an exact prop as all routes are now always exactly matched.
                   <Fragment>
                     <Search
-                      searchUser={searchUser}
+                      // Can remove SearchUser from App js since its moved to githubState. No need to pass props
                       clearUsers={clearUsers}
                       showClear={users.length > 0 ? true : false}
                       setAlert={showAlert}

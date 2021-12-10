@@ -1,24 +1,23 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
+import GithubContext from '../../context/github/githubContext';
 
-const Search = ({ searchUser, showClear, clearUsers, setAlert }) => {
+// Removing searchUser as a Prop since its not passed in from App js and more
+const Search = ({ showClear, clearUsers, setAlert }) => {
+  // Initialize Github Context
+  const githubContext = useContext(GithubContext);
   // A form needs to have a state in react
   // State level is relative to component itself and not App level for Forms
   // useState to add states for text. setText is a method to use the state. The text is set to ''
   const [text, setText] = useState('');
 
-  //Creating a Prop to pass up the text to App.js using this.props.searchUser
-  //The searchUser function will be created in App.js
-  // Remove this.state from this.state.text in functions
-  // Remove this.props from this.props.setAlert, and this.props.searchUser and can use setAlert and searchUser instead
-  // Replacing this.setState with setText created above
-
+  // since we brought in githubContent, we can add context to searchUser githubContext.searchUser(text); instead of sending props
   const onSubmit = (e) => {
     e.preventDefault();
     if (text === '') {
       setAlert('Please Enter a keyword', 'warning');
     } else {
-      searchUser(text);
+      githubContext.searchUser(text);
       setText('');
     }
   };
@@ -55,7 +54,6 @@ const Search = ({ searchUser, showClear, clearUsers, setAlert }) => {
 };
 
 Search.propTypes = {
-  searchUser: PropTypes.func.isRequired,
   clearUsers: PropTypes.func.isRequired,
   showClear: PropTypes.bool.isRequired,
   setAlert: PropTypes.func.isRequired,
