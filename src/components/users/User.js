@@ -1,16 +1,15 @@
 import React, { useEffect, Fragment, useContext } from 'react';
 import Spinner from '../layout/Spinner';
-import PropTypes from 'prop-types';
 import { Link, useParams } from 'react-router-dom';
 import Repos from '../repos/Repos';
 import GithubContext from '../../context/github/githubContext';
 
 // import { useParams } from 'react-router-dom';  // Only works for React Hooks in v6. Use {withRouter for classes}
 // Changing from Class to Functional Component. Adding props and destructring them from this.props
-const User = ({ getUserRepos, repos }) => {
+const User = () => {
   const githubContext = useContext(GithubContext);
 
-  const { getUser, user, loading } = githubContext;
+  const { getUser, user, loading, getUserRepos, repos } = githubContext;
   // Pull username from url (path='/user/:login') in App.js
   // this.props.match.params.logins > and pass it into get user which takes a username
 
@@ -111,11 +110,6 @@ const User = ({ getUserRepos, repos }) => {
       <Repos repos={repos} />
     </Fragment>
   );
-};
-
-User.propTypes = {
-  repos: PropTypes.array.isRequired,
-  getUserRepos: PropTypes.func.isRequired,
 };
 
 export default User;

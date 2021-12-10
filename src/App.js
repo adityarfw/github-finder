@@ -4,7 +4,6 @@ import './App.css';
 import Navbar from './components/layout/Navbar';
 import Users from './components/users/Users';
 import User from './components/users/User';
-import axios from 'axios';
 import Search from './components/users/Search';
 import Alert from './components/layout/Alert';
 import About from './components/pages/About';
@@ -18,9 +17,6 @@ import GithubState from './context/github/GithubState';
 //
 
 const App = () => {
-  const [user, setUser] = useState({});
-  const [repos, setRepos] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
 
   //get lifecycle method, this is a method that will run as soon as the App opens up
@@ -35,17 +31,6 @@ const App = () => {
   // Do not need to display generated users from above as all users are searchable
   // Creating a function for the prop and using async/await to retrive users by text
   // The response is in array items within data.
-
-  const getUserRepos = async (username) => {
-    setLoading(true);
-    const response = await axios.get(
-      `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-    );
-
-    console.log(response.data);
-    setRepos(response.data);
-    setLoading(false);
-  };
 
   const showAlert = (msg, type) => {
     setAlert({ msg, type });
@@ -83,11 +68,7 @@ const App = () => {
               <Route
                 path='/user/:userlogin'
                 // Do not need to add props as its automatically imported
-                element={
-                  <Fragment>
-                    <User getUserRepos={getUserRepos} repos={repos} />
-                  </Fragment>
-                }
+                element={<User />}
               />
             </Routes>
           </div>
