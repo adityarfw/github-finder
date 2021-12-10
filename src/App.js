@@ -9,6 +9,8 @@ import Search from './components/users/Search';
 import Alert from './components/layout/Alert';
 import About from './components/pages/About';
 
+import GithubState from './context/github/GithubState';
+
 //Class needs to extend component from React
 //Class cannot directly return, hence needs a render method and return is placed within it.
 // After adding myCity = () => 'Toronto' above render() method
@@ -78,51 +80,53 @@ const App = () => {
   };
 
   return (
-    <Router>
-      <div className='App'>
-        <Navbar
-          title='Github Finder'
-          icon='fab fa-github'
-          style={{ paddingRight: `5px` }}
-        />
-        <div className='container'>
-          <Alert alert={alert} />
-          <Routes>
-            <Route
-              path='/' // Using path instead of exact path in Router v6
-              element={
-                // In react-router-dom v6 the Route components no longer have render or component props, all routes render their components, as JSX, on the element prop. There is also no longer an exact prop as all routes are now always exactly matched.
-                <Fragment>
-                  <Search
-                    searchUser={searchUser}
-                    clearUsers={clearUsers}
-                    showClear={users.length > 0 ? true : false}
-                    setAlert={showAlert}
-                  />
-                  <Users loading={loading} users={users} />
-                </Fragment>
-              }
-            />
-            <Route path='/about' element={<About />} />
-            <Route
-              path='/user/:userlogin'
-              // Do not need to add props as its automatically imported
-              element={
-                <Fragment>
-                  <User
-                    getUser={getUser}
-                    getUserRepos={getUserRepos}
-                    user={user}
-                    repos={repos}
-                    loading={loading}
-                  />
-                </Fragment>
-              }
-            />
-          </Routes>
+    <GithubState>
+      <Router>
+        <div className='App'>
+          <Navbar
+            title='Github Finder'
+            icon='fab fa-github'
+            style={{ paddingRight: `5px` }}
+          />
+          <div className='container'>
+            <Alert alert={alert} />
+            <Routes>
+              <Route
+                path='/' // Using path instead of exact path in Router v6
+                element={
+                  // In react-router-dom v6 the Route components no longer have render or component props, all routes render their components, as JSX, on the element prop. There is also no longer an exact prop as all routes are now always exactly matched.
+                  <Fragment>
+                    <Search
+                      searchUser={searchUser}
+                      clearUsers={clearUsers}
+                      showClear={users.length > 0 ? true : false}
+                      setAlert={showAlert}
+                    />
+                    <Users loading={loading} users={users} />
+                  </Fragment>
+                }
+              />
+              <Route path='/about' element={<About />} />
+              <Route
+                path='/user/:userlogin'
+                // Do not need to add props as its automatically imported
+                element={
+                  <Fragment>
+                    <User
+                      getUser={getUser}
+                      getUserRepos={getUserRepos}
+                      user={user}
+                      repos={repos}
+                      loading={loading}
+                    />
+                  </Fragment>
+                }
+              />
+            </Routes>
+          </div>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </GithubState>
   );
 };
 
