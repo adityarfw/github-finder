@@ -18,7 +18,6 @@ import GithubState from './context/github/GithubState';
 //
 
 const App = () => {
-  const [users, setUsers] = useState([]);
   const [user, setUser] = useState({});
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -37,17 +36,6 @@ const App = () => {
   // Creating a function for the prop and using async/await to retrive users by text
   // The response is in array items within data.
 
-  // Get a single user info when clicked on More
-  const getUser = async (username) => {
-    setLoading(true);
-    const response = await axios.get(
-      `https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-    );
-
-    setUser(response.data);
-    setLoading(false);
-  };
-
   const getUserRepos = async (username) => {
     setLoading(true);
     const response = await axios.get(
@@ -56,11 +44,6 @@ const App = () => {
 
     console.log(response.data);
     setRepos(response.data);
-    setLoading(false);
-  };
-
-  const clearUsers = () => {
-    setUsers([]);
     setLoading(false);
   };
 
@@ -89,12 +72,10 @@ const App = () => {
                   // In react-router-dom v6 the Route components no longer have render or component props, all routes render their components, as JSX, on the element prop. There is also no longer an exact prop as all routes are now always exactly matched.
                   <Fragment>
                     <Search
-                      // Can remove SearchUser from App js since its moved to githubState. No need to pass props
-                      clearUsers={clearUsers}
-                      showClear={users.length > 0 ? true : false}
+                      // Can remove SearchUser, clearUsers, showClear from App js since its moved to githubState. No need to pass props
                       setAlert={showAlert}
                     />
-                    <Users loading={loading} users={users} />
+                    <Users />
                   </Fragment>
                 }
               />
@@ -104,13 +85,7 @@ const App = () => {
                 // Do not need to add props as its automatically imported
                 element={
                   <Fragment>
-                    <User
-                      getUser={getUser}
-                      getUserRepos={getUserRepos}
-                      user={user}
-                      repos={repos}
-                      loading={loading}
-                    />
+                    <User getUserRepos={getUserRepos} repos={repos} />
                   </Fragment>
                 }
               />

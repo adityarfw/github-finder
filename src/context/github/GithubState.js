@@ -37,11 +37,23 @@ const GithubState = (props) => {
     });
   };
 
-  // Get User
+  // Get a single user info when clicked on More
+  const getUser = async (username) => {
+    setLoading();
+    const response = await axios.get(
+      `https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+
+    dispatch({
+      type: GET_USER,
+      payload: response.data,
+    });
+  };
 
   // Get Repos
 
   // Clear Users
+  const clearUsers = () => dispatch({ type: CLEAR_USERS });
 
   // This function is called above and this dispatches SET_LOADING to githubReducer.js where state changes are made
   // Set Loading
@@ -55,6 +67,8 @@ const GithubState = (props) => {
         repos: state.repos,
         loading: state.loading,
         searchUser,
+        clearUsers,
+        getUser,
       }}
     >
       {props.children}
