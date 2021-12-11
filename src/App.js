@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; //Using Routes instead of Switch  in Router v6
 import './App.css';
 import Navbar from './components/layout/Navbar';
@@ -9,71 +9,47 @@ import Alert from './components/layout/Alert';
 import About from './components/pages/About';
 
 import GithubState from './context/github/GithubState';
+import AlertState from './context/alert/AlertState';
 
-//Class needs to extend component from React
-//Class cannot directly return, hence needs a render method and return is placed within it.
-// After adding myCity = () => 'Toronto' above render() method
-// from {this.myCity()} > using this because the method is outside the current method and part of the class
-//
+// Changing class to functional component
 
 const App = () => {
-  const [alert, setAlert] = useState(null);
-
-  //get lifecycle method, this is a method that will run as soon as the App opens up
-  // async componentDidMount() {
-  //   this.setState({ loading: true });
-  //   const response = await axios.get(
-  //     `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-  //   );
-  //   this.setState({ users: response.data, loading: false });
-  // }
-
-  // Do not need to display generated users from above as all users are searchable
-  // Creating a function for the prop and using async/await to retrive users by text
-  // The response is in array items within data.
-
-  const showAlert = (msg, type) => {
-    setAlert({ msg, type });
-
-    //Add time to Alert to disappear
-    setTimeout(() => setAlert(null), 2000);
-  };
-
   return (
     <GithubState>
-      <Router>
-        <div className='App'>
-          <Navbar
-            title='Github Finder'
-            icon='fab fa-github'
-            style={{ paddingRight: `5px` }}
-          />
-          <div className='container'>
-            <Alert alert={alert} />
-            <Routes>
-              <Route
-                path='/' // Using path instead of exact path in Router v6
-                element={
-                  // In react-router-dom v6 the Route components no longer have render or component props, all routes render their components, as JSX, on the element prop. There is also no longer an exact prop as all routes are now always exactly matched.
-                  <Fragment>
-                    <Search
-                      // Can remove SearchUser, clearUsers, showClear from App js since its moved to githubState. No need to pass props
-                      setAlert={showAlert}
-                    />
-                    <Users />
-                  </Fragment>
-                }
-              />
-              <Route path='/about' element={<About />} />
-              <Route
-                path='/user/:userlogin'
-                // Do not need to add props as its automatically imported
-                element={<User />}
-              />
-            </Routes>
+      <AlertState>
+        <Router>
+          <div className='App'>
+            <Navbar
+              title='Github Finder'
+              icon='fab fa-github'
+              style={{ paddingRight: `5px` }}
+            />
+            <div className='container'>
+              <Alert />
+              <Routes>
+                <Route
+                  path='/' // Using path instead of exact path in Router v6
+                  element={
+                    // In react-router-dom v6 the Route components no longer have render or component props, all routes render their components, as JSX, on the element prop. There is also no longer an exact prop as all routes are now always exactly matched.
+                    <Fragment>
+                      <Search
+                      // Can remove SearchUser, clearUsers, showClear, setAlert from App js since its moved to githubState. No need to pass props
+                      />
+                      <Users />
+                    </Fragment>
+                  }
+                />
+                <Route path='/about' element={<About />} />
+                <Route
+                  path='/user/:userlogin'
+                  // Do not need to add props as its automatically imported
+                  element={<User />}
+                />
+              </Routes>
+            </div>
           </div>
-        </div>
-      </Router>
+        </Router>
+      </AlertState>
     </GithubState>
   );
 };
