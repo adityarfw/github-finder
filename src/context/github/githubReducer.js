@@ -7,7 +7,7 @@ import {
 } from '../types';
 
 // Reducer is a default function. Takes parameters state and action
-export default (state, action) => {
+const GithubReducer = (state, action) => {
   // When object is dispatched to reducer from GithubState, it has a type and payload. We want get type and do something with it.
   // Using JS switch statements
   // We cannot directly change the state. We will copy it with < ...state > Spread operator, make changes and dispatch it
@@ -47,3 +47,5 @@ export default (state, action) => {
       return state;
   }
 };
+
+export default GithubReducer;
