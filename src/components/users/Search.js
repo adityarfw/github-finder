@@ -36,7 +36,7 @@ const Search = () => {
           onChange={onChange}
           type='text'
           name='text'
-          placeholder='Search...'
+          placeholder='Search for username'
           value={text}
         />
         <input
